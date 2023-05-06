@@ -15,18 +15,18 @@ import java.util.Date
 import java.util.Properties
 
 class Mail : Authenticator() {
-    //var content: String = "<EMPTY>"
+    var content: String = "<EMPTY>"
 
     suspend fun send(receiver: String){
         val props = Properties()
         props["mail.smtp.host"] = "smtp.yandex.ru"
-        props["mail.smtp.auth"] = "true"
         props["mail.smtp.port"] = "465"
-        props["mail.smtp.socketFactory.port"] = "465";
+        props["mail.smtp.auth"] = "true"
+        props["mail.smtp.socketFactory.port"] = "465"
         props["mail.smtp.socketFactory.class"] = "javax.net.ssl.SSLSocketFactory"
         props["mail.smtp.socketFactory.fallback"] = "false"
         props.setProperty("mail.smtp.quitwait", "false")
-        val session: Session = Session.getInstance(props, this)
+        val session: Session = Session.getInstance(props, this@Mail)
         try {
             val msg = MimeMessage(session)
             msg.setFrom(InternetAddress("smak-80@yandex.ru"))
@@ -38,14 +38,14 @@ class Mail : Authenticator() {
             val textBp = MimeBodyPart()
             textBp.setText("Письмо с координатами перемещения устройства", "utf-8")
 
-//            val att = MimeBodyPart()
-//            att.setText(content, "UTF-8", "plain")
-//            att.addHeader("Content-Type", "text/plain; charset=UTF-8")
-//            att.setFileName("logs.txt")
+            val att = MimeBodyPart()
+            att.setText(content, "UTF-8", "plain")
+            att.addHeader("Content-Type", "text/plain; charset=UTF-8")
+            att.setFileName("logs.txt")
 
             val mp: Multipart = MimeMultipart()
             mp.addBodyPart(textBp)
-            //mp.addBodyPart(att)
+            mp.addBodyPart(att)
 
             // add the Multipart to the message
             msg.setContent(mp)
@@ -62,6 +62,5 @@ class Mail : Authenticator() {
     }
 
     override fun getPasswordAuthentication(): PasswordAuthentication =
-        PasswordAuthentication("smak-80", "aronhpyuapfbdaso")
-
+        PasswordAuthentication("smak-80", "")
 }

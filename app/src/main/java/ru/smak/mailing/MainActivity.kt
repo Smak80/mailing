@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
     fun sendMail(){
         mainScope.launch {
-            Mail().send("smak-80@yandex.ru")
+            Mail().send("smak-80@yandex.ru", "Тестовое письмецо", "")
         }
     }
 }

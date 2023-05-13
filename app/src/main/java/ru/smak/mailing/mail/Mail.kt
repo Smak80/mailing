@@ -15,9 +15,11 @@ import java.util.Date
 import java.util.Properties
 
 class Mail : Authenticator() {
-    var content: String = "<EMPTY>"
-
-    suspend fun send(receiver: String){
+    suspend fun send(
+        receiver: String,
+        subject: String,
+        content: String,
+    ){
         val props = Properties()
         props["mail.smtp.host"] = "smtp.yandex.ru"
         props["mail.smtp.port"] = "465"
@@ -32,20 +34,20 @@ class Mail : Authenticator() {
             msg.setFrom(InternetAddress("smak-80@yandex.ru"))
             val address: Array<InternetAddress> = arrayOf(InternetAddress(receiver))
             msg.setRecipients(Message.RecipientType.TO, address)
-            msg.subject = "Перемещение..."
+            msg.subject = subject
             msg.sentDate = Date()
 
             val textBp = MimeBodyPart()
-            textBp.setText("Письмо с координатами перемещения устройства", "utf-8")
+            textBp.setText(content, "utf-8")
 
-            val att = MimeBodyPart()
-            att.setText(content, "UTF-8", "plain")
-            att.addHeader("Content-Type", "text/plain; charset=UTF-8")
-            att.setFileName("logs.txt")
+//            val att = MimeBodyPart()
+//            att.setText(content, "UTF-8", "plain")
+//            att.addHeader("Content-Type", "text/plain; charset=UTF-8")
+//            att.setFileName("logs.txt")
 
             val mp: Multipart = MimeMultipart()
             mp.addBodyPart(textBp)
-            mp.addBodyPart(att)
+//            mp.addBodyPart(att)
 
             // add the Multipart to the message
             msg.setContent(mp)
